@@ -1,35 +1,35 @@
-;Ia?aaa?a ii UART (Com ii?o)
-ComInit:											;eieoeaeecaoey Com ii?oa 
+;Передача по UART (Com порт)
+ComInit:											;инициализация Com порта 
 
-		Ldi		r17,$00								;
-;		Ldi		r16,$0C								;19200 eaia =12D(0Nh) i?e ?aaioa io eaa?oaaiai aaia?aoi?a 4 IAo STK500 (ia?aiu?ea OSCEL EA, io?ai eaa?o 4 IAo)
-		Ldi		r16,$0B								;19200 eaia =11D(0Bh) i?e ?aaioa io aiaoi. oaeoiaiai neaiaea 3.686 IAo STK500 (ia?aiu?ea OSCEL IA, ia io?ai eaa?o)
-		out 	UBRRH, r17							;a UBRRH
-		out 	UBRRL, r16							;a UBRRL
+		Ldi		temp2,$00								;
+;		Ldi		r16,$0C								;19200 кбод =12D(0Сh) при работе от кварцевого генератора 4 МГц STK500 (перемычка OSCEL КГ, нужен кварц 4 МГц)
+		Ldi		temp,$0B								;19200 кбод =11D(0Bh) при работе от внешн. тактового сигнала 3.686 МГц STK500 (перемычка OSCEL ПГ, не нужен кварц)
+		out 	UBRRH, temp2							;в UBRRH
+		out 	UBRRL, temp							;в UBRRL
 
- 		ldi 	r16, (1<<RXEN)|(1<<TXEN)|(1<<RXCIE)			;Enable receiver and transmitter e i?a?uaaiey ii i?e?io
-		out 	UCSRB,r16							;UCSRB
+ 		ldi 	temp, (1<<RXEN)|(1<<TXEN)|(1<<RXCIE)			;Enable receiver and transmitter и прерывания по приёму
+		out 	UCSRB,temp									;UCSRB
  
-    	ldi 	r16, (1<<URSEL)|(1<<UCSZ1)|(1<<UCSZ0);|(1<<UPM0)|(1<<UPM1);Set frame format: 8data, 1stop bit
-		out 	UCSRC,r16							;UCSRC
+    	ldi 	temp, (1<<URSEL)|(1<<UCSZ1)|(1<<UCSZ0)  		;|(1<<UPM0)|(1<<UPM1);Set frame format: 8data, 1stop bit
+		out 	UCSRC,temp									;UCSRC
 		sei
-		Ret											;aica?ao ec iiai?ia?aiiu
+		Ret											;возврат из подпрограммы
 
 ComStop: 	
-		ldi 	r16, (1<<RXEN)|(1<<TXEN)			;No Enable receiver and transmitter
-		out 	UCSRB,r16							;UCSRB
-		Ret											;aica?ao ec iiai?ia?aiiu
+		ldi 	temp, (1<<RXEN)|(1<<TXEN)			;No Enable receiver and transmitter
+		out 	UCSRB,temp							;UCSRB
+		Ret											;возврат из подпрограммы
 
-;Ia?aaa?a aaeoa ii NII
-TxCh:		sbis	UCSRA,UDRE		;i?eaaiea oeaaa (UDRE=1)iionoioaiey aooa?a COM ii?oa 
-			rjmp	TxCh			;iao aioiaiinoe ii?oa e ia?aaa?a UDRE=0, iiaoi?eou i?eaaiea
-			out		UDR,R20			;ionoie e aioia, caa?o?aai aaeo aaiiuo
-			ret						;eiiao TxCh,	aica?ao
+;Передача байта по СОМ
+TxCh:		sbis	UCSRA,UDRE		;ожидание флага (UDRE=1)опустошения буфера COM порта 
+			rjmp	TxCh			;нет готовности порта к передаче UDRE=0, повторить ожидание
+			out		UDR,R20			;пустой и готов, загружаем байт данных
+			ret						;конец TxCh,	возврат
 									
-;I?eai aaeoa ii NII
-RxCh:			Sbic 	PINA,0x04	;Anee A.4 eiiiea aua ia?aoa (= 0), oi ia?ai?uaioou iaio eiiaao aiec
-				RJmp	Res1		;A.4 eiiiea o?a io?aoa (= 1), auoia ia aa?oiaa eieuoi LOOP: ioeoaa e i?eoee e i?eaaou eaeo? ieaoau eiiieo (A.0-A.4)aianoi RET
-			sbis	UCSRA,Rxc		;anou oeaa i?eaia aaeoa ii COM ii?oo? 
-			rjmp	RxCh			;iao i?eaia aaeoa, iiaoi?eou i?eaaiea
-			In		R21,UDR			;aa, anou. ?eoaou i?eiyoue aaeo aaiiuo a R21
-			ret						;aica?ao
+;Прием байта по СОМ
+RxCh:		Sbic 	PINA,0x04	;Если A.4 кнопка еще нажата (= 0), то перепрыгнуть одну комаду вниз
+			RJmp	Res1		;A.4 кнопка уже отжата (= 1), выход на верхнее кольцо LOOP: откуда и пришли и ожидать какую нибудь кнопку (А.0-А.4)вместо RET
+			sbis	UCSRA,Rxc		;есть флаг приема байта по COM порту? 
+			rjmp	RxCh			;нет приема байта, повторить ожидание
+			In		R21,UDR			;да, есть. Читать принятый байт данных в R21
+			ret						;возврат
