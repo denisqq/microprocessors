@@ -13,6 +13,7 @@
 .def is_blink = r20
 .def current_button = r21
 .def is_print_name = r22
+.def button_counter = r24
 
 .cseg
 
@@ -22,7 +23,7 @@
 	rjmp TIM0_OVF ; Timer1 Overflow Handler
 
 .ORG URXCaddr			
-			RJMP	USART_RX
+	RJMP	USART_RX
 
 
 ;-----------|Установка таймера|------------------------------------------------------------------------
@@ -51,6 +52,7 @@ SETUP:
 	LDI led_timing, 0 
 	LDI is_blink, 0
 	LDI is_print_name, 0
+	LDI button_counter, 0
 
 ;-----------|Установка USART|------------------------------------------------------------------------
 USART_SETUP:
@@ -86,10 +88,34 @@ USART_SETUP:
 	SEI		//Разрешаем глобавльное прерывание
 
 
-;******Главный цикл(пустой)******************************
+;******Главный цикл******************************
 MAIN:
+	RCALL BUTTON_TIMER
 	RJMP MAIN
 
+BUTTON_TIMER:
+	CPI button_counter, 6
+	BRGE BUTTON_HANDLER
+	RET
+
+BUTTON_HANDLER:
+
+	SBIS	BTN_PIN,0x01
+	RCALL	FIRST_BUTTON
+
+	SBIS	BTN_PIN,0x02
+	RCALL	SECOND_BUTTON
+
+	SBIS	BTN_PIN,0x03
+	RCALL	THIRD_BUTTON
+
+	SBIS	BTN_PIN,0x04
+	RCALL	FOURTH_BUTTON
+
+	SBIS	BTN_PIN,0x05
+	RCALL	FIFTH_BUTTON
+	LDI button_counter, 0
+	RET
 
 ;==========[[Прием по USART]]========================================================================
 USART_RX:	
@@ -111,7 +137,7 @@ USART_RX:
 	CPI temp, 0x35
 	BREQ FIFTH_BUTTON
 
- 	cbi BTN_PIN, 0 // Очищаем бит
+ 	//cbi BTN_PIN, 0 // Очищаем бит
 	SEI     //глобальное разрешение прерываний
 	RETI
 
@@ -290,13 +316,15 @@ PRINT_ZERO:
 
 TIM0_OVF:
 	CLI
-	CPI is_blink, 0
-	BREQ END
-
+	//IN		current_button,BTN_PIN   //подключение кнопок
+	INC button_counter
 	INC led_counter
 
-	RCALL BLINK
+	CPI is_blink, 0
+	BREQ END
+	
 
+	RCALL BLINK
 
 BLINK:
 	CP led_counter, led_timing//Сравниваем счетчик, с таймером, если меньше чем тайминг, то =>

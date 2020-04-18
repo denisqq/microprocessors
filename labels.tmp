@@ -19,30 +19,32 @@
   <FILE>C:\Users\denisqq\Documents\ms\ms.map</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <SETUP><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>29</LINE></SETUP>
-  <TIM0_OVF><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>291</LINE></TIM0_OVF>
-  <USART_RX><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>95</LINE></USART_RX>
-  <USART_SETUP><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>56</LINE></USART_SETUP>
-  <MAIN><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>90</LINE></MAIN>
-  <FIRST_BUTTON><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>118</LINE></FIRST_BUTTON>
-  <SECOND_BUTTON><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>130</LINE></SECOND_BUTTON>
-  <THIRD_BUTTON><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>133</LINE></THIRD_BUTTON>
-  <FOURTH_BUTTON><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>145</LINE></FOURTH_BUTTON>
-  <FIFTH_BUTTON><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>154</LINE></FIFTH_BUTTON>
-  <ENABLE_BLINK><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>159</LINE></ENABLE_BLINK>
-  <DISABLE_BLINK><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>163</LINE></DISABLE_BLINK>
-  <USART_VIX><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>167</LINE></USART_VIX>
-  <INVERT><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>326</LINE></INVERT>
-  <PRINT_FIRST_NAME><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>184</LINE></PRINT_FIRST_NAME>
-  <PRINT_SECOND_NAME><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>204</LINE></PRINT_SECOND_NAME>
-  <PRINT_LED_STATE><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>220</LINE></PRINT_LED_STATE>
-  <USART_TX><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>174</LINE></USART_TX>
-  <PRINT_ZERO><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>283</LINE></PRINT_ZERO>
-  <PRINT_ONE><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>279</LINE></PRINT_ONE>
-  <END><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>339</LINE></END>
-  <BLINK><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>301</LINE></BLINK>
-  <put_over><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>321</LINE></put_over>
-  <vix><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>331</LINE></vix>
-  <PORT_OUT><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>335</LINE></PORT_OUT>
+  <SETUP><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>30</LINE></SETUP>
+  <TIM0_OVF><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>317</LINE></TIM0_OVF>
+  <USART_RX><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>121</LINE></USART_RX>
+  <USART_SETUP><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>58</LINE></USART_SETUP>
+  <MAIN><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>92</LINE></MAIN>
+  <BUTTON_TIMER><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>96</LINE></BUTTON_TIMER>
+  <BUTTON_HANDLER><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>101</LINE></BUTTON_HANDLER>
+  <FIRST_BUTTON><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>144</LINE></FIRST_BUTTON>
+  <SECOND_BUTTON><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>156</LINE></SECOND_BUTTON>
+  <THIRD_BUTTON><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>159</LINE></THIRD_BUTTON>
+  <FOURTH_BUTTON><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>171</LINE></FOURTH_BUTTON>
+  <FIFTH_BUTTON><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>180</LINE></FIFTH_BUTTON>
+  <ENABLE_BLINK><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>185</LINE></ENABLE_BLINK>
+  <DISABLE_BLINK><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>189</LINE></DISABLE_BLINK>
+  <USART_VIX><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>193</LINE></USART_VIX>
+  <INVERT><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>354</LINE></INVERT>
+  <PRINT_FIRST_NAME><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>210</LINE></PRINT_FIRST_NAME>
+  <PRINT_SECOND_NAME><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>230</LINE></PRINT_SECOND_NAME>
+  <PRINT_LED_STATE><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>246</LINE></PRINT_LED_STATE>
+  <USART_TX><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>200</LINE></USART_TX>
+  <PRINT_ZERO><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>309</LINE></PRINT_ZERO>
+  <PRINT_ONE><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>305</LINE></PRINT_ONE>
+  <END><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>367</LINE></END>
+  <BLINK><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>329</LINE></BLINK>
+  <put_over><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>349</LINE></put_over>
+  <vix><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>359</LINE></vix>
+  <PORT_OUT><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>363</LINE></PORT_OUT>
  </LABELS>
 </ASSEMBLER_INFO>
