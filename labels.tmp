@@ -17,6 +17,7 @@
  </HEX_FILES>
  <OUTPUT_FILES>
   <FILE>C:\Users\denisqq\Documents\ms\ms.map</FILE>
+  <FILE>C:\Users\denisqq\Documents\ms\ms.lst</FILE>
  </OUTPUT_FILES>
  <LABELS>
   <SETUP><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>31</LINE></SETUP>
