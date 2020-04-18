@@ -7,13 +7,14 @@
 
 
 .def temp = r16 // Присваиваем символические имена регистрам
-.def led_states = r17
-.def led_counter = r18
-.def led_timing = r19
-.def is_blink = r20
-.def current_button = r21
-.def is_print_name = r22
-.def button_counter = r24
+.def led_states = r17//Состояние индикаторов
+.def led_counter = r18 //Внутрнний счетчик для лампочек
+.def led_timing = r19 // Значение, для счетчика, меняется в Button handler`s
+.def is_blink = r20 //Флаг, что надо мигать
+//.def current_button = r21 //Регистр, текущей кнопки
+.def is_print_name = r22 //Флаг, что было выведено первое имя
+.def button_counter = r24 //Счетчик для нажатий кнопок
+.def latest_command = r25 //Регистр для запоминания последнй комманды, введеной через USART
 
 .cseg
 
@@ -23,7 +24,7 @@
 	rjmp TIM0_OVF ; Timer1 Overflow Handler
 
 .ORG URXCaddr			
-	RJMP	USART_RX
+	RJMP	USART_RX // USART Handler
 
 
 ;-----------|Установка таймера|------------------------------------------------------------------------
@@ -93,69 +94,88 @@ MAIN:
 	RCALL BUTTON_TIMER
 	RJMP MAIN
 
+//Таймер проверки нажатия кнопок, чтобы избежать задваивания нажатий
 BUTTON_TIMER:
 	CPI button_counter, 6
 	BRGE BUTTON_HANDLER
 	RET
 
+
+//Перехватчики нажатий кнопок на макете STK500
 BUTTON_HANDLER:
 
-	SBIS	BTN_PIN,0x01
-	RCALL	FIRST_BUTTON
+	SBIS	BTN_PIN,0x01 //Проверяем нажатие первой кнопки
+	RCALL	FIRST_BUTTON //Вызываем Хендлер первой кнопки
 
-	SBIS	BTN_PIN,0x02
-	RCALL	SECOND_BUTTON
+	SBIS	BTN_PIN,0x02 //Проверяем нажатие второй кнопки
+	RCALL	SECOND_BUTTON//Вызываем Хендлер второй кнопки
 
-	SBIS	BTN_PIN,0x03
-	RCALL	THIRD_BUTTON
+	SBIS	BTN_PIN,0x03 //Проверяем нажатие третьей кнопки
+	RCALL	THIRD_BUTTON//Вызываем Хендлер третьей кнопки
 
-	SBIS	BTN_PIN,0x04
-	RCALL	FOURTH_BUTTON
+	SBIS	BTN_PIN,0x04 //Проверяем нажатие четвертой кнопки
+	RCALL	FOURTH_BUTTON//Вызываем Хендлер четвертой кнопки
 
-	SBIS	BTN_PIN,0x05
-	RCALL	FIFTH_BUTTON
+	SBIS	BTN_PIN,0x05 //Проверяем нажатие пятой кнопки
+	RCALL	FIFTH_BUTTON//Вызываем Хендлер пятой кнопки
 	LDI button_counter, 0
 	RET
 
-;==========[[Прием по USART]]========================================================================
+;==========[[Прием по USART]]=======================================================================
+;Передача по интерфейсу USART осуществляется по символьно, поэтому для ввода комманды "44" или "11" запоминаем прошлую комманду
 USART_RX:	
 	CLI     //глобальный запрет прерываний 
 	IN	temp,UDR
 
-	CPI temp, 0x31
+	CP temp, latest_command //Сравниваем текущую комманду, с прошлой
+	BRNE SET_LATEST_COMMAND
+
+	LDI latest_command, 0 //Обнуляем прошлую комманду
+
+	CPI temp, 0x31 //Проверка ввода комманды 11
 	BREQ FIRST_BUTTON
 
-	CPI temp, 0x32
+	CPI temp, 0x32 //Проверка ввода комманды 22
 	BREQ SECOND_BUTTON
 
-	CPI temp, 0x33
+	CPI temp, 0x33 //Проверка ввода комманды 33
 	BREQ THIRD_BUTTON
 
-	CPI temp, 0x34
+	CPI temp, 0x34 //Проверка ввода комманды 44
 	BREQ FOURTH_BUTTON
 
-	CPI temp, 0x35
-	BREQ FIFTH_BUTTON
+	CPI temp, 0x35 //Проверка ввода комманды 55
+	BREQ FIFTH_BUTTON 
 
- 	//cbi BTN_PIN, 0 // Очищаем бит
+	RJMP USART_RX_END//Заканчиваем прерывание
+
+//Устанавливаем последнюю комманду
+SET_LATEST_COMMAND:
+	MOV	 latest_command,temp
+	RJMP USART_RX_END
+//Заканчиваем прерывание
+USART_RX_END:
 	SEI     //глобальное разрешение прерываний
 	RETI
-
+//Обработчик нажатия на первую кнопку
 FIRST_BUTTON:
-	LDI led_timing, 4//Примерно секунда, меняем и в зависмости от значения, чаще-медленее мигает
+	LDI led_timing, 4//Примерно 950ms, меняем и в зависмости от значения, чаще-медленее мигает
 
+	;Сравниваем флаг и включаем мигание
 	CPI is_blink, 0
-	BREQ ENABLE_BLINK
+	BREQ ENABLE_BLINK 
 
+ 	;Сравниваем флаг и выключаем мигание
 	CPI is_blink, 1
 	BREQ DISABLE_BLINK
 
 	RJMP USART_VIX
 
-
+//Обработчик нажатия на вторую кнопку
 SECOND_BUTTON:
 	RJMP INVERT
 
+//Обработчик нажатия на третью кнопку
 THIRD_BUTTON:
 	LDI led_timing, 6//Примерно 1.2, меняем и в зависмости от значения, чаще-медленее мигает
 
@@ -167,7 +187,7 @@ THIRD_BUTTON:
 
 	RJMP USART_VIX
 
-
+//Обработчик нажатия на четвертую кнопку
 FOURTH_BUTTON:
 	CPI is_print_name, 0
 	BREQ PRINT_FIRST_NAME
@@ -177,18 +197,21 @@ FOURTH_BUTTON:
 
 	RJMP USART_VIX
 
+//Обработчик нажатия на пятую кнопку
 FIFTH_BUTTON:
 	ldi	 led_timing, 7
 	RJMP PRINT_LED_STATE 
 
 
+//Выставляем флаг, что можно начинать мигать
 ENABLE_BLINK:
 	LDI is_blink, 1
 	RJMP USART_VIX
-
+//Выставляем флаг, и убираем мигание
 DISABLE_BLINK:
 	LDI is_blink, 0
 	RJMP USART_VIX
+
 
 USART_VIX:
 	SEI //Разрешаем прерывание
@@ -302,10 +325,12 @@ PRINT_LED_STATE:
 	RCALL	USART_TX
 	RET
 
+//Вывод на консоль 1
 PRINT_ONE:
 	LDI 	temp, 0x31
 	RCALL	USART_TX
 	RET
+//Вывод на консоль 0
 PRINT_ZERO:
 	LDI temp,0x30
 	RCALL	USART_TX
@@ -320,8 +345,8 @@ TIM0_OVF:
 	INC button_counter
 	INC led_counter
 
-	CPI is_blink, 0
-	BREQ END
+	CPI is_blink, 0 //Сравниваем флаг, если 0 то=>
+	BREQ END //Заканчиваем мигание
 	
 
 	RCALL BLINK
