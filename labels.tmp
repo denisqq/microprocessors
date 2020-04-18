@@ -19,31 +19,17 @@
   <FILE>C:\Users\denisqq\Documents\ms\ms.map</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <SETUP><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>36</LINE></SETUP>
-  <TIMER0_OF><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>118</LINE></TIMER0_OF>
-  <USART_RX><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>281</LINE></USART_RX>
-  <USART_SETUP><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>70</LINE></USART_SETUP>
-  <SETUP_T0><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>84</LINE></SETUP_T0>
-  <MAIN><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>112</LINE></MAIN>
-  <SET_1><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>173</LINE></SET_1>
-  <SET_2><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>183</LINE></SET_2>
-  <START_RUN_1><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>194</LINE></START_RUN_1>
-  <FIRST_NAME><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>295</LINE></FIRST_NAME>
-  <SECOND_NAME><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>314</LINE></SECOND_NAME>
-  <RUN_1><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>200</LINE></RUN_1>
-  <END><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>166</LINE></END>
-  <p1><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>210</LINE></p1>
-  <p2><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>237</LINE></p2>
-  <STAGE0><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>214</LINE></STAGE0>
-  <STAGE4><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>234</LINE></STAGE4>
-  <STAGE1><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>221</LINE></STAGE1>
-  <STAGE3><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>230</LINE></STAGE3>
-  <STAGE2><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>226</LINE></STAGE2>
-  <STAGE5><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>241</LINE></STAGE5>
-  <STAGE9><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>263</LINE></STAGE9>
-  <STAGE6><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>250</LINE></STAGE6>
-  <STAGE8><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>259</LINE></STAGE8>
-  <STAGE7><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>255</LINE></STAGE7>
-  <USART_TX><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>271</LINE></USART_TX>
+  <SETUP><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>14</LINE></SETUP>
+  <TIM0_OVF><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>43</LINE></TIM0_OVF>
+  <MAIN><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>40</LINE></MAIN>
+  <BLINK><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>64</LINE></BLINK>
+  <FIRST_BUTTON><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>48</LINE></FIRST_BUTTON>
+  <SECOND_BUTTON><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>52</LINE></SECOND_BUTTON>
+  <INVERT><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>90</LINE></INVERT>
+  <THIRD_BUTTON><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>55</LINE></THIRD_BUTTON>
+  <END><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>103</LINE></END>
+  <put_over><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>85</LINE></put_over>
+  <vix><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>95</LINE></vix>
+  <PORT_OUT><FILE>C:\Users\denisqq\Documents\ms\ms.asm</FILE><LINE>99</LINE></PORT_OUT>
  </LABELS>
 </ASSEMBLER_INFO>
