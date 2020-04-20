@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.1.42  C:\Users\denisqq\Documents\ms\ms.asm Mon Apr 20 16:18:18 2020
+AVRASM ver. 2.1.42  C:\Users\denisqq\Documents\ms\ms.asm Mon Apr 20 16:34:42 2020
 
 C:\Users\denisqq\Documents\ms\ms.asm(1): Including file 'C:\Program Files (x86)\Atmel\AVR Tools\AvrAssembler2\Appnotes\m8515def.inc'
                  
@@ -731,7 +731,7 @@ C:\Users\denisqq\Documents\ms\ms.asm(1): Including file 'C:\Program Files (x86)\
 000010 e002      	LDI	TEMP,0b00000010				;С. 258 TCCR0    //OCIE0 - разрешение прерываний по совпадению 
 000011 bf09      	OUT TIMSK, TEMP
                  
-000012 e004      	LDI	TEMP,0b00000100			;С. 270 TCCR0    //выбор предделителяна 1024 
+000012 e005      	LDI	TEMP,0b00000101			;С. 270 TCCR0    //выбор предделителяна 1024 
 000013 bf03      	OUT TCCR0,TEMP
                  
 000014 ef0f      	LDI	temp,0b11111111
@@ -847,7 +847,7 @@ C:\Users\denisqq\Documents\ms\ms.asm(1): Including file 'C:\Program Files (x86)\
 000054 9518      	RETI
                  //Обработчик нажатия на первую кнопку
                  FIRST_BUTTON:
-000055 e13e      	LDI led_timing, 30//Примерно 950ms, меняем и в зависмости от значения, чаще-медленее мигает
+000055 e13d      	LDI led_timing, 29//Примерно 950ms, меняем и в зависмости от значения, чаще-медленее мигает
                  
                  	;Сравниваем флаг и включаем мигание
 000056 3040      	CPI is_blink, 0
@@ -865,7 +865,7 @@ C:\Users\denisqq\Documents\ms\ms.asm(1): Including file 'C:\Program Files (x86)\
                  
                  //Обработчик нажатия на третью кнопку
                  THIRD_BUTTON:
-00005c e236      	LDI led_timing, 38//Примерно 1.2, меняем и в зависмости от значения, чаще-медленее мигает
+00005c e235      	LDI led_timing, 37//Примерно 1.2, меняем и в зависмости от значения, чаще-медленее мигает
                  
 00005d 3040      	CPI is_blink, 0
 00005e f051      	BREQ ENABLE_BLINK
@@ -887,7 +887,7 @@ C:\Users\denisqq\Documents\ms\ms.asm(1): Including file 'C:\Program Files (x86)\
                  
                  //Обработчик нажатия на пятую кнопку
                  FIFTH_BUTTON:
-000067 e239      	ldi	 led_timing, 41
+000067 e238      	ldi	 led_timing, 40
 000068 c02a      	RJMP PRINT_LED_STATE 
                  
                  
