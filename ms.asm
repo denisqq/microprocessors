@@ -35,7 +35,7 @@ SETUP:
 	LDI		temp,high(RAMEND)	;
 	OUT		SPH,temp			;
 
-	LDI temp, 0xFF
+	LDI temp, 0
 	OUT TCNT0, temp
 
 	//TCCR0 - регистр предделителя
@@ -96,7 +96,7 @@ MAIN:
 
 //Таймер проверки нажатия кнопок, чтобы избежать задваивания нажатий
 BUTTON_TIMER:
-	CPI button_counter, 6
+	CPI button_counter, 10
 	BRGE BUTTON_HANDLER
 	RET
 

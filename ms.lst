@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.1.42  C:\Users\denisqq\Documents\ms\ms.asm Mon Apr 20 16:34:42 2020
+AVRASM ver. 2.1.42  C:\Users\denisqq\Documents\ms\ms.asm Tue Apr 21 12:25:30 2020
 
 C:\Users\denisqq\Documents\ms\ms.asm(1): Including file 'C:\Program Files (x86)\Atmel\AVR Tools\AvrAssembler2\Appnotes\m8515def.inc'
                  
@@ -723,7 +723,7 @@ C:\Users\denisqq\Documents\ms\ms.asm(1): Including file 'C:\Program Files (x86)\
 00000c e002      	LDI		temp,high(RAMEND)	;
 00000d bf0e      	OUT		SPH,temp			;
                  
-00000e ef0f      	LDI temp, 0xFF
+00000e e000      	LDI temp, 0
 00000f bf02      	OUT TCNT0, temp
                  
                  	//TCCR0 - регистр предделителя
@@ -784,7 +784,7 @@ C:\Users\denisqq\Documents\ms\ms.asm(1): Including file 'C:\Program Files (x86)\
                  
                  //Таймер проверки нажатия кнопок, чтобы избежать задваивания нажатий
                  BUTTON_TIMER:
-000032 3086      	CPI button_counter, 6
+000032 308a      	CPI button_counter, 10
 000033 f40c      	BRGE BUTTON_HANDLER
 000034 9508      	RET
                  
