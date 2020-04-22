@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.1.42  C:\Users\denisqq\Documents\ms\ms.asm Tue Apr 21 12:25:30 2020
+AVRASM ver. 2.1.42  C:\Users\denisqq\Documents\ms\ms.asm Wed Apr 22 08:20:22 2020
 
 C:\Users\denisqq\Documents\ms\ms.asm(1): Including file 'C:\Program Files (x86)\Atmel\AVR Tools\AvrAssembler2\Appnotes\m8515def.inc'
                  
@@ -709,10 +709,10 @@ C:\Users\denisqq\Documents\ms\ms.asm(1): Including file 'C:\Program Files (x86)\
                  .org 0
 000000 c009      	rjmp SETUP	
                  .org $007 
-000007 c0b8      	rjmp TIM0_OVF ; Timer1 Overflow Handler
+000007 c0c2      	rjmp TIM0_OVF ; Timer1 Overflow Handler
                  
                  .ORG URXCaddr			
-000009 c037      	RJMP	USART_RX // USART Handler
+000009 c038      	RJMP	USART_RX // USART Handler
                  
                  
                  ;-----------|Установка таймера|------------------------------------------------------------------------
@@ -742,344 +742,355 @@ C:\Users\denisqq\Documents\ms\ms.asm(1): Including file 'C:\Program Files (x86)\
 000018 e040      	LDI is_blink, 0
 000019 e060      	LDI is_print_name, 0
 00001a e080      	LDI button_counter, 0
+00001b bb18      	OUT PORTB, led_states
                  
                  ;-----------|Установка USART|------------------------------------------------------------------------
                  USART_SETUP:
-00001b e000      	LDI		temp,HIGH(Rate)
-00001c bd00      	OUT		UBRRH,temp
-00001d e109      	LDI		temp,LOW(Rate)
-00001e b909      	OUT		UBRRL,temp
+00001c e000      	LDI		temp,HIGH(Rate)
+00001d bd00      	OUT		UBRRH,temp
+00001e e109      	LDI		temp,LOW(Rate)
+00001f b909      	OUT		UBRRL,temp
                  
-00001f b706      	IN		temp,EMCUCR
-000020 770f      	ANDI	temp,0b01111111				;SM0<<0
-000021 bf06      	OUT		EMCUCR,temp
+000020 b706      	IN		temp,EMCUCR
+000021 770f      	ANDI	temp,0b01111111				;SM0<<0
+000022 bf06      	OUT		EMCUCR,temp
                  
-000022 b705      	IN		temp,MCUCR
-000023 6200      	SBR		temp,(1<<SE)
-000024 7e0f      	ANDI	temp,0b11101111				;SM1<<0
-000025 bf05      	OUT		MCUCR,temp
+000023 b705      	IN		temp,MCUCR
+000024 6200      	SBR		temp,(1<<SE)
+000025 7e0f      	ANDI	temp,0b11101111				;SM1<<0
+000026 bf05      	OUT		MCUCR,temp
                  
-000026 b704      	IN		temp,MCUCSR
-000027 6d0f      	SBR		temp,0b11011111				;SM2<<0
-000028 bf04      	OUT		MCUCSR,temp
+000027 b704      	IN		temp,MCUCSR
+000028 6d0f      	SBR		temp,0b11011111				;SM2<<0
+000029 bf04      	OUT		MCUCSR,temp
                  
-000029 e908      	LDI		temp,(1<<RXCIE)|(1<<RXEN)|(1<<TXEN)   ;RXCE-hразрешение прерывания по завершению приема  RXEN-разрешение приема 
+00002a e908      	LDI		temp,(1<<RXCIE)|(1<<RXEN)|(1<<TXEN)   ;RXCE-hразрешение прерывания по завершению приема  RXEN-разрешение приема 
                  			                                             ; TXEN- разрешение передачи
-00002a b90a      	OUT		UCSRB,temp; установка битов в регистр  UCSRB
+00002b b90a      	OUT		UCSRB,temp; установка битов в регистр  UCSRB
                  
-00002b e806      	LDI		temp,(1<<UCSZ0)|(1<<UCSZ1)|(1<<URSEL)  ;UCSZ0,UCSZ1-определение количества бит данных на 8 бит 
+00002c e806      	LDI		temp,(1<<UCSZ0)|(1<<UCSZ1)|(1<<URSEL)  ;UCSZ0,UCSZ1-определение количества бит данных на 8 бит 
                  			                                              ;URSEL-выбираем регистр UCSRC, а не UBRR
-00002c bd00      	OUT		UCSRC,temp; установка битов в регистр  UCSRC
+00002d bd00      	OUT		UCSRC,temp; установка битов в регистр  UCSRC
                  	
-00002d e000      	LDI		temp,0b00000000
-00002e bb0a      	OUT		DDRA,temp					;Установка режима работы IN
+00002e e000      	LDI		temp,0b00000000
+00002f bb0a      	OUT		DDRA,temp					;Установка режима работы IN
                  
-00002f 9478      	SEI		//Разрешаем глобавльное прерывание
+000030 9478      	SEI		//Разрешаем глобавльное прерывание
                  
                  
                  ;******Главный цикл******************************
                  MAIN:
-000030 d001      	RCALL BUTTON_TIMER
-000031 cffe      	RJMP MAIN
+000031 d001      	RCALL BUTTON_TIMER
+000032 cffe      	RJMP MAIN
                  
                  //Таймер проверки нажатия кнопок, чтобы избежать задваивания нажатий
                  BUTTON_TIMER:
-000032 308a      	CPI button_counter, 10
-000033 f40c      	BRGE BUTTON_HANDLER
-000034 9508      	RET
+000033 308a      	CPI button_counter, 10
+000034 f40c      	BRGE BUTTON_HANDLER
+000035 9508      	RET
                  
                  
                  //Перехватчики нажатий кнопок на макете STK500
                  BUTTON_HANDLER:
                  
-000035 9bc9      	SBIS	BTN_PIN,0x01 //Проверяем нажатие первой кнопки
-000036 d01e      	RCALL	FIRST_BUTTON //Вызываем Хендлер первой кнопки
+000036 9bc9      	SBIS	BTN_PIN,0x01 //Проверяем нажатие первой кнопки
+000037 d01e      	RCALL	FIRST_BUTTON //Вызываем Хендлер первой кнопки
                  
-000037 9bca      	SBIS	BTN_PIN,0x02 //Проверяем нажатие второй кнопки
-000038 d022      	RCALL	SECOND_BUTTON//Вызываем Хендлер второй кнопки
+000038 9bca      	SBIS	BTN_PIN,0x02 //Проверяем нажатие второй кнопки
+000039 d025      	RCALL	SECOND_BUTTON//Вызываем Хендлер второй кнопки
                  
-000039 9bcb      	SBIS	BTN_PIN,0x03 //Проверяем нажатие третьей кнопки
-00003a d021      	RCALL	THIRD_BUTTON//Вызываем Хендлер третьей кнопки
+00003a 9bcb      	SBIS	BTN_PIN,0x03 //Проверяем нажатие третьей кнопки
+00003b d024      	RCALL	THIRD_BUTTON//Вызываем Хендлер третьей кнопки
                  
-00003b 9bcc      	SBIS	BTN_PIN,0x04 //Проверяем нажатие четвертой кнопки
-00003c d025      	RCALL	FOURTH_BUTTON//Вызываем Хендлер четвертой кнопки
+00003c 9bcc      	SBIS	BTN_PIN,0x04 //Проверяем нажатие четвертой кнопки
+00003d d02b      	RCALL	FOURTH_BUTTON//Вызываем Хендлер четвертой кнопки
                  
-00003d 9bcd      	SBIS	BTN_PIN,0x05 //Проверяем нажатие пятой кнопки
-00003e d028      	RCALL	FIFTH_BUTTON//Вызываем Хендлер пятой кнопки
-00003f e080      	LDI button_counter, 0
-000040 9508      	RET
+00003e 9bcd      	SBIS	BTN_PIN,0x05 //Проверяем нажатие пятой кнопки
+00003f d02e      	RCALL	FIFTH_BUTTON//Вызываем Хендлер пятой кнопки
+000040 e080      	LDI button_counter, 0
+000041 9508      	RET
                  
                  ;==========[[Прием по USART]]=======================================================================
                  ;Передача по интерфейсу USART осуществляется по символьно, поэтому для ввода комманды "44" или "11" запоминаем прошлую комманду
                  USART_RX:	
-000041 94f8      	CLI     //глобальный запрет прерываний 
-000042 b10c      	IN	temp,UDR
+000042 94f8      	CLI     //глобальный запрет прерываний 
+000043 b10c      	IN	temp,UDR
                  
-000043 1709      	CP temp, latest_command //Сравниваем текущую комманду, с прошлой
-000044 f461      	BRNE SET_LATEST_COMMAND
+000044 1709      	CP temp, latest_command //Сравниваем текущую комманду, с прошлой
+000045 f461      	BRNE SET_LATEST_COMMAND
                  
-000045 e090      	LDI latest_command, 0 //Обнуляем прошлую комманду
+000046 e090      	LDI latest_command, 0 //Обнуляем прошлую комманду
                  
-000046 3301      	CPI temp, 0x31 //Проверка ввода комманды 11
-000047 f069      	BREQ FIRST_BUTTON
+000047 3301      	CPI temp, 0x31 //Проверка ввода комманды 11
+000048 f069      	BREQ FIRST_BUTTON
                  
-000048 3302      	CPI temp, 0x32 //Проверка ввода комманды 22
-000049 f089      	BREQ SECOND_BUTTON
+000049 3302      	CPI temp, 0x32 //Проверка ввода комманды 22
+00004a f0a1      	BREQ SECOND_BUTTON
                  
-00004a 3303      	CPI temp, 0x33 //Проверка ввода комманды 33
-00004b f081      	BREQ THIRD_BUTTON
+00004b 3303      	CPI temp, 0x33 //Проверка ввода комманды 33
+00004c f099      	BREQ THIRD_BUTTON
                  
-00004c 3304      	CPI temp, 0x34 //Проверка ввода комманды 44
-00004d f0a1      	BREQ FOURTH_BUTTON
+00004d 3304      	CPI temp, 0x34 //Проверка ввода комманды 44
+00004e f0d1      	BREQ FOURTH_BUTTON
                  
-00004e 3305      	CPI temp, 0x35 //Проверка ввода комманды 55
-00004f f0b9      	BREQ FIFTH_BUTTON 
+00004f 3305      	CPI temp, 0x35 //Проверка ввода комманды 55
+000050 f0e9      	BREQ FIFTH_BUTTON 
                  
-000050 c002      	RJMP USART_RX_END//Заканчиваем прерывание
+000051 c002      	RJMP USART_RX_END//Заканчиваем прерывание
                  
                  //Устанавливаем последнюю комманду
                  SET_LATEST_COMMAND:
-000051 2f90      	MOV	 latest_command,temp
-000052 c000      	RJMP USART_RX_END
+000052 2f90      	MOV	 latest_command,temp
+000053 c000      	RJMP USART_RX_END
                  //Заканчиваем прерывание
                  USART_RX_END:
-000053 9478      	SEI     //глобальное разрешение прерываний
-000054 9518      	RETI
+000054 9478      	SEI     //глобальное разрешение прерываний
+000055 9518      	RETI
                  //Обработчик нажатия на первую кнопку
                  FIRST_BUTTON:
-000055 e13d      	LDI led_timing, 29//Примерно 950ms, меняем и в зависмости от значения, чаще-медленее мигает
+000056 e13d      	LDI led_timing, 29//Примерно 950ms, меняем и в зависмости от значения, чаще-медленее мигает
+000057 e020      	LDI led_counter, 0
+000058 e000      	LDI temp, 0
+000059 bf02      	OUT TCNT0, temp
                  
                  	;Сравниваем флаг и включаем мигание
-000056 3040      	CPI is_blink, 0
-000057 f089      	BREQ ENABLE_BLINK 
+00005a 3040      	CPI is_blink, 0
+00005b f0b9      	BREQ ENABLE_BLINK 
                  
                   	;Сравниваем флаг и выключаем мигание
-000058 3041      	CPI is_blink, 1
-000059 f089      	BREQ DISABLE_BLINK
+00005c 3041      	CPI is_blink, 1
+00005d f0b9      	BREQ DISABLE_BLINK
                  
-00005a c012      	RJMP USART_VIX
+00005e c018      	RJMP USART_VIX
                  
                  //Обработчик нажатия на вторую кнопку
                  SECOND_BUTTON:
-00005b c079      	RJMP INVERT
+00005f c07f      	RJMP INVERT
                  
                  //Обработчик нажатия на третью кнопку
                  THIRD_BUTTON:
-00005c e235      	LDI led_timing, 37//Примерно 1.2, меняем и в зависмости от значения, чаще-медленее мигает
+000060 e235      	LDI led_timing, 37//Примерно 1.2, меняем и в зависмости от значения, чаще-медленее мигает
+000061 e020      	LDI led_counter, 0
+000062 e000      	LDI temp, 0
+000063 bf02      	OUT TCNT0, temp
                  
-00005d 3040      	CPI is_blink, 0
-00005e f051      	BREQ ENABLE_BLINK
+000064 3040      	CPI is_blink, 0
+000065 f069      	BREQ ENABLE_BLINK
                  
-00005f 3041      	CPI is_blink, 1
-000060 f051      	BREQ DISABLE_BLINK
+000066 3041      	CPI is_blink, 1
+000067 f069      	BREQ DISABLE_BLINK
                  
-000061 c00b      	RJMP USART_VIX
+000068 c00e      	RJMP USART_VIX
                  
                  //Обработчик нажатия на четвертую кнопку
                  FOURTH_BUTTON:
-000062 3060      	CPI is_print_name, 0
-000063 f089      	BREQ PRINT_FIRST_NAME
+000069 3060      	CPI is_print_name, 0
+00006a f0a1      	BREQ PRINT_FIRST_NAME
                  
-000064 3061      	CPI is_print_name, 1
-000065 f0f9      	BREQ PRINT_SECOND_NAME
+00006b 3061      	CPI is_print_name, 1
+00006c f111      	BREQ PRINT_SECOND_NAME
                  
-000066 c006      	RJMP USART_VIX
+00006d c009      	RJMP USART_VIX
                  
                  //Обработчик нажатия на пятую кнопку
                  FIFTH_BUTTON:
-000067 e238      	ldi	 led_timing, 40
-000068 c02a      	RJMP PRINT_LED_STATE 
+00006e e238      	ldi	 led_timing, 40
+00006f e020      	LDI led_counter, 0
+000070 e000      	LDI temp, 0
+000071 bf02      	OUT TCNT0, temp
+                 
+000072 c02a      	RJMP PRINT_LED_STATE 
                  
                  
                  //Выставляем флаг, что можно начинать мигать
                  ENABLE_BLINK:
-000069 e041      	LDI is_blink, 1
-00006a c002      	RJMP USART_VIX
+000073 e041      	LDI is_blink, 1
+000074 c002      	RJMP USART_VIX
                  //Выставляем флаг, и убираем мигание
                  DISABLE_BLINK:
-00006b e040      	LDI is_blink, 0
-00006c c000      	RJMP USART_VIX
+000075 e040      	LDI is_blink, 0
+000076 c000      	RJMP USART_VIX
                  
                  
                  USART_VIX:
-00006d 9478      	SEI //Разрешаем прерывание
-00006e 9518      	RETI //Завершаем текущее прерывание
+000077 9478      	SEI //Разрешаем прерывание
+000078 9518      	RETI //Завершаем текущее прерывание
                  
                  ;====================================================================================================
                  
                  ;==========[[Отправка по USART]]=====================================================================
                  USART_TX:
-00006f 94f8      	CLI    //глобальный запрет прерываний 
-000070 b90c      	OUT		UDR,temp
-000071 9b5d      	SBIS	UCSRA,UDRE     //если бит установлен пропускаем следующую команду UDRE_флаг опустошение регистра передатчика
+000079 94f8      	CLI    //глобальный запрет прерываний 
+00007a b90c      	OUT		UDR,temp
+00007b 9b5d      	SBIS	UCSRA,UDRE     //если бит установлен пропускаем следующую команду UDRE_флаг опустошение регистра передатчика
                  			                       //1-если буфер пустой 
-000072 cffe      	RJMP	PC-1
-000073 9478      	SEI    //глобальное разрешение прерываний
-000074 9508      	RET
+00007c cffe      	RJMP	PC-1
+00007d 9478      	SEI    //глобальное разрешение прерываний
+00007e 9508      	RET
                  
                  //Выводим первое имя
                  PRINT_FIRST_NAME:
-000075 e404      	LDI		temp,68						;D
-000076 dff8      	RCALL	USART_TX
-000077 e605      	LDI		temp,101					;e
-000078 dff6      	RCALL	USART_TX
-000079 e60e          LDI		temp,110					;n
-00007a dff4      	RCALL	USART_TX
-00007b e609      	LDI		temp,105					;i
-00007c dff2      	RCALL	USART_TX
-00007d e703      	LDI		temp,115					;s
-00007e dff0      	RCALL	USART_TX
-00007f e00d      	LDI		temp,13						;CR    //возврат каретки 
-000080 dfee      	RCALL	USART_TX
-000081 e00a      	LDI		temp,10						;LF    //перевод строки
-000082 dfec      	RCALL	USART_TX
+00007f e404      	LDI		temp,68						;D
+000080 dff8      	RCALL	USART_TX
+000081 e605      	LDI		temp,101					;e
+000082 dff6      	RCALL	USART_TX
+000083 e60e          LDI		temp,110					;n
+000084 dff4      	RCALL	USART_TX
+000085 e609      	LDI		temp,105					;i
+000086 dff2      	RCALL	USART_TX
+000087 e703      	LDI		temp,115					;s
+000088 dff0      	RCALL	USART_TX
+000089 e00d      	LDI		temp,13						;CR    //возврат каретки 
+00008a dfee      	RCALL	USART_TX
+00008b e00a      	LDI		temp,10						;LF    //перевод строки
+00008c dfec      	RCALL	USART_TX
                  
-000083 9563      	inc		is_print_name //Инк счетчик, чтобы не было повторного срабатывания
-000084 9508      	RET	
+00008d 9563      	inc		is_print_name //Инк счетчик, чтобы не было повторного срабатывания
+00008e 9508      	RET	
                  
                  //Выводим второе имя
                  PRINT_SECOND_NAME:
-000085 e405      	LDI		temp,69						;E
-000086 dfe8      	RCALL	USART_TX
-000087 e607      	LDI		temp,103					;g
-000088 dfe6      	RCALL	USART_TX
-000089 e60f          LDI		temp,111					;o
-00008a dfe4      	RCALL	USART_TX
-00008b e702      	LDI		temp,114					;r
-00008c dfe2      	RCALL	USART_TX
-00008d e00d      	LDI		temp,13						;CR    //возврат каретки 
-00008e dfe0      	RCALL	USART_TX
-00008f e00a      	LDI		temp,10						;LF    //перевод строки
-000090 dfde      	RCALL	USART_TX
-000091 9563      	inc		is_print_name //Инк счетчик, чтобы не было повторного срабатывания
-000092 9508      	RET	
+00008f e405      	LDI		temp,69						;E
+000090 dfe8      	RCALL	USART_TX
+000091 e607      	LDI		temp,103					;g
+000092 dfe6      	RCALL	USART_TX
+000093 e60f          LDI		temp,111					;o
+000094 dfe4      	RCALL	USART_TX
+000095 e702      	LDI		temp,114					;r
+000096 dfe2      	RCALL	USART_TX
+000097 e00d      	LDI		temp,13						;CR    //возврат каретки 
+000098 dfe0      	RCALL	USART_TX
+000099 e00a      	LDI		temp,10						;LF    //перевод строки
+00009a dfde      	RCALL	USART_TX
+00009b 9563      	inc		is_print_name //Инк счетчик, чтобы не было повторного срабатывания
+00009c 9508      	RET	
                  
                  PRINT_LED_STATE:
                  
-000093 fd10      	SBRC 	led_states, 0 //Проверяем, если нулевой бит не установлен, то выводим 0
-000094 d028      	RCALL	PRINT_ZERO
+00009d fd10      	SBRC 	led_states, 0 //Проверяем, если нулевой бит не установлен, то выводим 0
+00009e d028      	RCALL	PRINT_ZERO
                  	
-000095 ff10      	SBRS	led_states, 0 //Проверяем, если нулевой бит установлен, то выводим 1
-000096 d023      	RCALL	PRINT_ONE
+00009f ff10      	SBRS	led_states, 0 //Проверяем, если нулевой бит установлен, то выводим 1
+0000a0 d023      	RCALL	PRINT_ONE
                  
-000097 fd11      	SBRC 	led_states, 1 //Проверяем, если первый бит не установлен, то выводим 0
-000098 d024      	RCALL	PRINT_ZERO
+0000a1 fd11      	SBRC 	led_states, 1 //Проверяем, если первый бит не установлен, то выводим 0
+0000a2 d024      	RCALL	PRINT_ZERO
                  	
-000099 ff11      	SBRS	led_states, 1 //Проверяем, если первый бит установлен, то выводим 1
-00009a d01f      	RCALL	PRINT_ONE
+0000a3 ff11      	SBRS	led_states, 1 //Проверяем, если первый бит установлен, то выводим 1
+0000a4 d01f      	RCALL	PRINT_ONE
                  	
-00009b fd12      	SBRC	led_states, 2 //Проверяем, если второй бит не установлен, то выводим 0
-00009c d020      	RCALL	PRINT_ZERO
+0000a5 fd12      	SBRC	led_states, 2 //Проверяем, если второй бит не установлен, то выводим 0
+0000a6 d020      	RCALL	PRINT_ZERO
                  	
-00009d ff12      	SBRS	led_states, 2 //Проверяем, если второй бит установлен, то выводим 1
-00009e d01b      	RCALL	PRINT_ONE
+0000a7 ff12      	SBRS	led_states, 2 //Проверяем, если второй бит установлен, то выводим 1
+0000a8 d01b      	RCALL	PRINT_ONE
                  
-00009f fd13      	SBRC 	led_states, 3 //Проверяем, если третий бит не установлен, то выводим 0
-0000a0 d01c      	RCALL	PRINT_ZERO
+0000a9 fd13      	SBRC 	led_states, 3 //Проверяем, если третий бит не установлен, то выводим 0
+0000aa d01c      	RCALL	PRINT_ZERO
                  	
-0000a1 ff13      	SBRS	led_states, 3//Проверяем, если третий бит установлен, то выводим 1
-0000a2 d017      	RCALL	PRINT_ONE
+0000ab ff13      	SBRS	led_states, 3//Проверяем, если третий бит установлен, то выводим 1
+0000ac d017      	RCALL	PRINT_ONE
                  	
-0000a3 fd14      	SBRC	led_states, 4 //Проверяем, если четвертый бит не установлен, то выводим 0
-0000a4 d018      	RCALL	PRINT_ZERO
+0000ad fd14      	SBRC	led_states, 4 //Проверяем, если четвертый бит не установлен, то выводим 0
+0000ae d018      	RCALL	PRINT_ZERO
                  	
-0000a5 ff14      	SBRS	led_states, 4//Проверяем, если четвертый бит установлен, то выводим 1
-0000a6 d013      	RCALL	PRINT_ONE
+0000af ff14      	SBRS	led_states, 4//Проверяем, если четвертый бит установлен, то выводим 1
+0000b0 d013      	RCALL	PRINT_ONE
                  
-0000a7 fd15      	SBRC 	led_states, 5 //Проверяем, если пятый бит не установлен, то выводим 0
-0000a8 d014      	RCALL	PRINT_ZERO
+0000b1 fd15      	SBRC 	led_states, 5 //Проверяем, если пятый бит не установлен, то выводим 0
+0000b2 d014      	RCALL	PRINT_ZERO
                  	
-0000a9 ff15      	SBRS	led_states, 5//Проверяем, если пятый бит установлен, то выводим 1
-0000aa d00f      	RCALL	PRINT_ONE
+0000b3 ff15      	SBRS	led_states, 5//Проверяем, если пятый бит установлен, то выводим 1
+0000b4 d00f      	RCALL	PRINT_ONE
                  	
-0000ab fd16      	SBRC	led_states, 6 //Проверяем, если шестой бит не установлен, то выводим 0
-0000ac d010      	RCALL	PRINT_ZERO
+0000b5 fd16      	SBRC	led_states, 6 //Проверяем, если шестой бит не установлен, то выводим 0
+0000b6 d010      	RCALL	PRINT_ZERO
                  	
-0000ad ff16      	SBRS	led_states, 6//Проверяем, если шестой бит установлен, то выводим 1
-0000ae d00b      	RCALL	PRINT_ONE
+0000b7 ff16      	SBRS	led_states, 6//Проверяем, если шестой бит установлен, то выводим 1
+0000b8 d00b      	RCALL	PRINT_ONE
                  
-0000af fd17      	SBRC 	led_states, 7 //Проверяем, если седьмой бит не установлен, то выводим 0
-0000b0 d00c      	RCALL	PRINT_ZERO
+0000b9 fd17      	SBRC 	led_states, 7 //Проверяем, если седьмой бит не установлен, то выводим 0
+0000ba d00c      	RCALL	PRINT_ZERO
                  	
-0000b1 ff17      	SBRS	led_states, 7 //Проверяем, если седьмой бит установлен, то выводим 1
-0000b2 d007      	RCALL	PRINT_ONE
+0000bb ff17      	SBRS	led_states, 7 //Проверяем, если седьмой бит установлен, то выводим 1
+0000bc d007      	RCALL	PRINT_ONE
                  	
-0000b3 e000      	LDI		temp, 0
+0000bd e000      	LDI		temp, 0
                  
-0000b4 dfba      	RCALL	USART_TX
-0000b5 e00d      	LDI		temp,13						;CR    //возврат каретки 
-0000b6 dfb8      	RCALL	USART_TX
-0000b7 e00a      	LDI		temp,10						;LF    //перевод строки
-0000b8 dfb6      	RCALL	USART_TX
-0000b9 9508      	RET
+0000be dfba      	RCALL	USART_TX
+0000bf e00d      	LDI		temp,13						;CR    //возврат каретки 
+0000c0 dfb8      	RCALL	USART_TX
+0000c1 e00a      	LDI		temp,10						;LF    //перевод строки
+0000c2 dfb6      	RCALL	USART_TX
+0000c3 9508      	RET
                  
                  //Вывод на консоль 1
                  PRINT_ONE:
-0000ba e301      	LDI 	temp, 0x31
-0000bb dfb3      	RCALL	USART_TX
-0000bc 9508      	RET
+0000c4 e301      	LDI 	temp, 0x31
+0000c5 dfb3      	RCALL	USART_TX
+0000c6 9508      	RET
                  //Вывод на консоль 0
                  PRINT_ZERO:
-0000bd e300      	LDI temp,0x30
-0000be dfb0      	RCALL	USART_TX
-0000bf 9508      	RET
+0000c7 e300      	LDI temp,0x30
+0000c8 dfb0      	RCALL	USART_TX
+0000c9 9508      	RET
                  ;====================================================================================================
                  
                  ;==========[[Таймер]]========================================================================
                  
                  TIM0_OVF:
-0000c0 94f8      	CLI
+0000ca 94f8      	CLI
                  	//IN		current_button,BTN_PIN   //подключение кнопок
-0000c1 9583      	INC button_counter
-0000c2 9523      	INC led_counter
+0000cb 9583      	INC button_counter
+0000cc 9523      	INC led_counter
                  
-0000c3 3040      	CPI is_blink, 0 //Сравниваем флаг, если 0 то=>
-0000c4 f0b9      	BREQ END //Заканчиваем мигание
+0000cd 3040      	CPI is_blink, 0 //Сравниваем флаг, если 0 то=>
+0000ce f0b9      	BREQ END //Заканчиваем мигание
                  	
                  
-0000c5 d000      	RCALL BLINK
+0000cf d000      	RCALL BLINK
                  
                  BLINK:
-0000c6 1723      	CP led_counter, led_timing//Сравниваем счетчик, с таймером, если меньше чем тайминг, то =>
-0000c7 f0a0      	BRLO END //Выходим из цикла, ничего не делаем
+0000d0 1723      	CP led_counter, led_timing//Сравниваем счетчик, с таймером, если меньше чем тайминг, то =>
+0000d1 f0a0      	BRLO END //Выходим из цикла, ничего не делаем
                  	
                  	//TODO Можно поменять, и использовать stack
-0000c8 3f10      	CPI	led_states, 0b11110000//сравниваем, если диоды в конечном состоянии, и сдвигать больше некуда, то =>
-0000c9 f041      	BREQ put_over //Перекидываем первую единицу в начало, далее аналогично
+0000d2 3f10      	CPI	led_states, 0b11110000//сравниваем, если диоды в конечном состоянии, и сдвигать больше некуда, то =>
+0000d3 f041      	BREQ put_over //Перекидываем первую единицу в начало, далее аналогично
                  
-0000ca 3e11      	CPI led_states, 0b11100001
-0000cb f031      	BREQ put_over
+0000d4 3e11      	CPI led_states, 0b11100001
+0000d5 f031      	BREQ put_over
                  
-0000cc 3c13      	CPI led_states, 0b11000011
-0000cd f021      	BREQ put_over
+0000d6 3c13      	CPI led_states, 0b11000011
+0000d7 f021      	BREQ put_over
                  
-0000ce 3817      	CPI led_states, 0b10000111
-0000cf f011      	BREQ put_over
+0000d8 3817      	CPI led_states, 0b10000111
+0000d9 f011      	BREQ put_over
                  
-0000d0 0f11      	LSL led_states //Логическое смещение состояния светодиодов 00001111 => 00011110
-0000d1 c006      	RJMP vix
+0000da 0f11      	LSL led_states //Логическое смещение состояния светодиодов 00001111 => 00011110
+0000db c006      	RJMP vix
                  
                  PUT_OVER:
-0000d2 0f11      	LSL led_states //Смещение в лево
-0000d3 9513      	INC led_states //Инкреминтируем
-0000d4 c003      	RJMP vix
+0000dc 0f11      	LSL led_states //Смещение в лево
+0000dd 9513      	INC led_states //Инкреминтируем
+0000de c003      	RJMP vix
                  
                  INVERT:
-0000d5 ef0f      	LDI temp, 255 // 255=11111111
-0000d6 2710      	EOR	led_states, temp //EOR перевернет текущее состояние светодиодов
-0000d7 c000      	RJMP VIX
+0000df ef0f      	LDI temp, 255 // 255=11111111
+0000e0 2710      	EOR	led_states, temp //EOR перевернет текущее состояние светодиодов
+0000e1 c000      	RJMP VIX
                  
                  VIX:
-0000d8 e020      	LDI led_counter,0 //Обнуляем счетчик
-0000d9 c000      	RJMP PORT_OUT // вызываем метку PORT_OUT
+0000e2 e020      	LDI led_counter,0 //Обнуляем счетчик
+0000e3 c000      	RJMP PORT_OUT // вызываем метку PORT_OUT
                  
                  PORT_OUT:
-0000da bb18      	OUT PORTB, led_states  //Выводим на порт текущее состояние светодиодов
-0000db c000      	RJMP END //Завершаем текущее прерывание
+0000e4 bb18      	OUT PORTB, led_states  //Выводим на порт текущее состояние светодиодов
+0000e5 c000      	RJMP END //Завершаем текущее прерывание
                  
                  END:
-0000dc 9478      	SEI //Разрешаем прерывание
-0000dd 9518      	RETI //Завершаем текущее прерывание
+0000e6 9478      	SEI //Разрешаем прерывание
+0000e7 9518      	RETI //Завершаем текущее прерывание
                  
                  ;====================================================================================================
 
@@ -1101,7 +1112,7 @@ counted separately from r26..r31 here.
 ATmega8515 register use summary:
 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 r5 :   0 r6 :   0 r7 :   0 
 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 r13:   0 r14:   0 r15:   0 
-r16:  61 r17:  26 r18:   3 r19:   5 r20:   8 r21:   0 r22:   5 r23:   0 
+r16:  67 r17:  27 r18:   6 r19:   5 r20:   8 r21:   0 r22:   5 r23:   0 
 r24:   4 r25:   3 r26:   0 r27:   0 r28:   0 r29:   0 r30:   0 r31:   0 
 x  :   0 y  :   0 z  :   0 
 Registers used: 8 out of 35 (22.9%)
@@ -1116,10 +1127,10 @@ bset  :   0 bst   :   0 cbi   :   0 cbr   :   0 clc   :   0 clh   :   0
 cli   :   3 cln   :   0 clr   :   0 cls   :   0 clt   :   0 clv   :   0 
 clz   :   0 com   :   0 cp    :   2 cpc   :   0 cpi   :  17 cpse  :   0 
 dec   :   0 eor   :   1 fmul  :   0 fmuls :   0 fmulsu:   0 icall :   0 
-ijmp  :   0 in    :   4 inc   :   5 ld    :   0 ldd   :   0 ldi   :  43 
+ijmp  :   0 in    :   4 inc   :   5 ld    :   0 ldd   :   0 ldi   :  49 
 lds   :   0 lpm   :   0 lsl   :   2 lsr   :   0 mov   :   1 movw  :   0 
 mul   :   0 muls  :   0 mulsu :   0 neg   :   0 nop   :   0 or    :   0 
-ori   :   0 out   :  16 pop   :   0 push  :   0 rcall :  41 ret   :   8 
+ori   :   0 out   :  20 pop   :   0 push  :   0 rcall :  41 ret   :   8 
 reti  :   3 rjmp  :  19 rol   :   0 ror   :   0 sbc   :   0 sbci  :   0 
 sbi   :   0 sbic  :   0 sbis  :   6 sbiw  :   0 sbr   :   2 sbrc  :   8 
 sbrs  :   8 sec   :   0 seh   :   0 sei   :   5 sen   :   0 ser   :   0 
@@ -1131,7 +1142,7 @@ Instructions used: 24 out of 110 (21.8%)
 ATmega8515 memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0001bc    430      0    430    8192   5.2%
+[.cseg] 0x000000 0x0001d0    450      0    450    8192   5.5%
 [.dseg] 0x000060 0x000060      0      0      0     512   0.0%
 [.eseg] 0x000000 0x000000      0      0      0     512   0.0%
 

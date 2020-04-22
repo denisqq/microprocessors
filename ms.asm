@@ -54,6 +54,7 @@ SETUP:
 	LDI is_blink, 0
 	LDI is_print_name, 0
 	LDI button_counter, 0
+	OUT PORTB, led_states
 
 ;-----------|Установка USART|------------------------------------------------------------------------
 USART_SETUP:
@@ -160,6 +161,9 @@ USART_RX_END:
 //Обработчик нажатия на первую кнопку
 FIRST_BUTTON:
 	LDI led_timing, 29//Примерно 950ms, меняем и в зависмости от значения, чаще-медленее мигает
+	LDI led_counter, 0
+	LDI temp, 0
+	OUT TCNT0, temp
 
 	;Сравниваем флаг и включаем мигание
 	CPI is_blink, 0
@@ -178,6 +182,9 @@ SECOND_BUTTON:
 //Обработчик нажатия на третью кнопку
 THIRD_BUTTON:
 	LDI led_timing, 37//Примерно 1.2, меняем и в зависмости от значения, чаще-медленее мигает
+	LDI led_counter, 0
+	LDI temp, 0
+	OUT TCNT0, temp
 
 	CPI is_blink, 0
 	BREQ ENABLE_BLINK
@@ -200,6 +207,10 @@ FOURTH_BUTTON:
 //Обработчик нажатия на пятую кнопку
 FIFTH_BUTTON:
 	ldi	 led_timing, 40
+	LDI led_counter, 0
+	LDI temp, 0
+	OUT TCNT0, temp
+
 	RJMP PRINT_LED_STATE 
 
 
